@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:clock/features/core/router/router.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,6 +12,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: router,
     );
   }
 }

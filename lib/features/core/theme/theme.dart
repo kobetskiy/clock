@@ -29,13 +29,6 @@ ThemeData theme() {
     pageTransitionsTheme: const PageTransitionsTheme(builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
     }),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.barColor,
-      elevation: 0,
-      unselectedItemColor: AppColors.unselectedItemColor,
-      selectedItemColor: AppColors.textColor,
-      selectedLabelStyle: TextStyle(fontSize: 12),
-    ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       // backgroundColor: AppColors.primaryColor,
       foregroundColor: AppColors.textColor,

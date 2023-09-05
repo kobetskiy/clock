@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:clock/features/core/router/router.dart';
 import 'package:clock/features/core/theme/theme.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MainApp());
 }
 

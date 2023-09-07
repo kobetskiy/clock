@@ -8,11 +8,6 @@ ThemeData theme() {
     fontSize: 20,
     fontWeight: FontWeight.w500,
   );
-  TextStyle titleMedium = const TextStyle(
-    color: AppColors.textColor,
-    fontSize: 22,
-    fontWeight: FontWeight.w500,
-  );
   TextStyle bodySmall = const TextStyle(
     color: AppColors.subtitleColor,
     fontSize: 16,
@@ -73,7 +68,7 @@ ThemeData theme() {
       ),
     ),
     listTileTheme: ListTileThemeData(
-      titleTextStyle: titleMedium,
+      titleTextStyle: displaySmall.copyWith(fontSize: 22),
       subtitleTextStyle: bodySmall,
       contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
     ),
@@ -85,7 +80,6 @@ ThemeData theme() {
     textTheme: GoogleFonts.robotoTextTheme(
       TextTheme(
         displaySmall: displaySmall,
-        titleMedium: titleMedium,
         bodySmall: bodySmall,
       ),
     ),

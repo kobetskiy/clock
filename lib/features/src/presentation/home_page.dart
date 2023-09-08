@@ -1,4 +1,4 @@
-import 'package:clock/features/src/components/bottom_navigation_bar_widget.dart';
+import 'package:clock/features/src/widgets/bottom_navigation_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:clock/features/src/presentation/pages_view.dart';
 
@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: Theme(
         data: ThemeData(splashColor: Colors.transparent,),
         child: BottomNavigationBarWidget(
-
           tabIndex: _selectedIndex,
           onTap: _onItemTapped,
         ),

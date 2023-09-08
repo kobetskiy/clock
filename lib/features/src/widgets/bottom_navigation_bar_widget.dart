@@ -1,4 +1,4 @@
-import 'package:clock/features/core/colors/colors.dart';
+import 'package:clock/core/ui/colors/colors.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigationBarWidget extends StatefulWidget {

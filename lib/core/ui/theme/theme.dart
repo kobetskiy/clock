@@ -1,4 +1,4 @@
-import 'package:clock/features/core/colors/colors.dart';
+import 'package:clock/core/ui/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,7 +25,6 @@ ThemeData theme() {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
     }),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      // backgroundColor: AppColors.primaryColor,
       foregroundColor: AppColors.textColor,
       iconSize: 32,
       shape: CircleBorder(),

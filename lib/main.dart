@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:clock/features/core/router/router.dart';
-import 'package:clock/features/core/theme/theme.dart';
+import 'package:clock/core/router/router.dart';
+import 'package:clock/core/ui/theme/theme.dart';
 import 'package:flutter/services.dart';
 
 void main() {

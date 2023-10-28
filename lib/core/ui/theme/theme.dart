@@ -24,6 +24,7 @@ ThemeData theme() {
     pageTransitionsTheme: const PageTransitionsTheme(builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
     }),
+    fontFamily: GoogleFonts.roboto().fontFamily,
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       foregroundColor: AppColors.textColor,
       iconSize: 32,
@@ -56,9 +57,6 @@ ThemeData theme() {
     switchTheme: const SwitchThemeData(
       splashRadius: 0,
     ),
-    timePickerTheme: TimePickerThemeData(
-      shape: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    ),
     cardTheme: CardTheme(
       color: AppColors.listTileColor,
       elevation: 7,
@@ -67,20 +65,18 @@ ThemeData theme() {
       ),
     ),
     listTileTheme: ListTileThemeData(
-      titleTextStyle: displaySmall.copyWith(fontSize: 22),
+      titleTextStyle: displaySmall.copyWith(fontSize: 24),
       subtitleTextStyle: bodySmall,
-      contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      contentPadding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.backgroundColor,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
     ),
-    textTheme: GoogleFonts.robotoTextTheme(
-      TextTheme(
-        displaySmall: displaySmall,
-        bodySmall: bodySmall,
-      ),
+    textTheme: TextTheme(
+      displaySmall: displaySmall,
+      bodySmall: bodySmall,
     ),
   );
 }

@@ -5,6 +5,6 @@ class TimerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('timer')),);
+    return const Scaffold(body: Center(child: Text('timer')),);
   }
 }

@@ -100,7 +100,7 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
           width: 250,
           height: 250,
           child: CustomPaint(
-            painter: CustomCircle(),
+            painter: CustomStopwatchPainter(),
           ),
         ),
         Text(
@@ -112,7 +112,7 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
   }
 }
 
-class CustomCircle extends CustomPainter {
+class CustomStopwatchPainter extends CustomPainter {
   late double percents = 100 / 60000 * int.parse(circleMillisecond()) / 100;
 
   @override

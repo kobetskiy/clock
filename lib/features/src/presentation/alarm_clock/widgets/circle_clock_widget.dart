@@ -50,7 +50,7 @@ class _CircleClockWidgetState extends State<CircleClockWidget> {
           width: 250,
           height: 250,
           child: CustomPaint(
-            painter: CustomCircle(),
+            painter: CustomClockPainter(),
           ),
         ),
         Text(
@@ -62,7 +62,7 @@ class _CircleClockWidgetState extends State<CircleClockWidget> {
   }
 }
 
-class CustomCircle extends CustomPainter {
+class CustomClockPainter extends CustomPainter {
   DateTime time = DateTime.now();
 
   late double percents = 1 / 0.6 * time.second / 100;

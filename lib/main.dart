@@ -7,7 +7,7 @@ import 'features/src/models/view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-    await Hive.initFlutter();
+  await Hive.initFlutter();
   Hive.registerAdapter(AlarmClockAdapter());
   await Hive.openBox<AlarmClock>('alarm_clock_box');
   SystemChrome.setPreferredOrientations(

@@ -8,6 +8,11 @@ ThemeData theme() {
     fontSize: 20,
     fontWeight: FontWeight.w500,
   );
+  TextStyle titleSmall = const TextStyle(
+    color: AppColors.textColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+  );
   TextStyle bodySmall = const TextStyle(
     color: AppColors.subtitleColor,
     fontSize: 16,
@@ -42,15 +47,10 @@ ThemeData theme() {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(AppColors.listTileColor),
-        foregroundColor: MaterialStateProperty.all(AppColors.dangerRedColor),
         elevation: MaterialStateProperty.all(5),
         overlayColor: MaterialStateProperty.all(Colors.grey[850]),
-        padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 60)),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
         ),
       ),
     ),
@@ -75,8 +75,8 @@ ThemeData theme() {
       elevation: 0,
     ),
     textTheme: TextTheme(
-      displaySmall: displaySmall,
-      bodySmall: bodySmall,
-    ),
+        displaySmall: displaySmall,
+        bodySmall: bodySmall,
+        titleSmall: titleSmall),
   );
 }

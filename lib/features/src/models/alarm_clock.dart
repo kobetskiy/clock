@@ -6,22 +6,28 @@ part 'alarm_clock.g.dart';
 
 @HiveType(typeId: 0)
 class AlarmClock {
+
   @HiveField(0)
-  final bool isOn;
+  final int id;
 
   @HiveField(1)
-  final String time;
-  
+  bool isOn;
+
   @HiveField(2)
+  int hours;
+  
+    @HiveField(3)
+  int minutes;
+
+  @HiveField(4)
   final String description;
 
-  @HiveField(3)
-  final int id;
 
   AlarmClock({
     required this.isOn,
-    required this.time,
+    required this.id,
+    required this.hours,
+    required this.minutes,
     required this.description,
-    required this.id
   });
 }

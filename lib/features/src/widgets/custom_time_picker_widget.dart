@@ -8,11 +8,13 @@ class CustomTimePickerWidget extends StatefulWidget {
     super.key,
     required this.timeValue,
     required this.maxValue,
+    required this.onChanged,
     this.itemWidth = 60,
   });
 
   int timeValue;
   final int maxValue;
+  final void Function(int) onChanged;
   final double itemWidth;
 
   @override
@@ -38,6 +40,7 @@ class _CustomTimePickerWidgetState extends State<CustomTimePickerWidget> {
             onChanged: (value) {
               setState(() {
                 widget.timeValue = value;
+                widget.onChanged(value);
               });
             },
             textStyle: const TextStyle(color: Colors.grey, fontSize: 20),

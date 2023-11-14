@@ -1,8 +1,8 @@
-// ignore_for_file: unused_local_variable
-
+import 'package:clock/core/ui/colors/colors.dart';
 import 'package:clock/features/src/models/view.dart';
+import 'package:clock/features/src/presentation/alarm_clock/pages/view.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AlarmClockList extends StatefulWidget {
   const AlarmClockList({super.key, required this.listOfAlarmClocks});
@@ -18,31 +18,71 @@ class _AlarmClockListState extends State<AlarmClockList> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: db.box.listenable(),
-      builder: (context, value, child) => SliverList.builder(
-        itemCount: db.box.length,
-        itemBuilder: (context, index) {
-          int reversedIndex = widget.listOfAlarmClocks.length - 1 - index;
-          return Card(
-          borderOnForeground: false,
-          child: ListTile(
-            title: Text(
-              widget.listOfAlarmClocks[0].time,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+    return SliverList.builder(
+      itemCount: db.box.length,
+      itemBuilder: (context, index) {
+        int reversedIndex = widget.listOfAlarmClocks.length - 1 - index;
+        AlarmClock alarm = widget.listOfAlarmClocks[reversedIndex];
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
+          child: Slidable(
+            endActionPane: ActionPane(
+              extentRatio: 0.3,
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) => setState(() => db.delete(alarm)),
+                  backgroundColor: AppColors.dangerRedColor,
+                  foregroundColor: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  icon: Icons.delete,
+                ),
+              ],
             ),
-            subtitle: Text(
-              widget.listOfAlarmClocks[0].description,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Card(
+              margin: const EdgeInsets.all(0),
+              child: ListTile(
+                title: Text(
+                  '${alarm.hours.toString().padLeft(2, '0')}:${alarm.minutes.toString().padLeft(2, '0')}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  alarm.description,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: Transform.scale(
+                  scale: 0.9,
+                  child: Switch(
+                    value: alarm.isOn,
+                    onChanged: (val) {
+                      alarm.isOn = val;
+                      setState(() {});
+                    },
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    AlarmClockDetailsPage.routeName,
+                    arguments: {
+                      'alarmClock': AlarmClock(
+                        isOn: alarm.isOn,
+                        id: alarm.id,
+                        hours: alarm.hours,
+                        minutes: alarm.minutes,
+                        description: alarm.description,
+                      ),
+                      'isNew': false,
+                    },
+                  );
+                },
+              ),
             ),
-            trailing: Switch(value: widget.listOfAlarmClocks[0].isOn, onChanged: (val) {}),
-            onTap: () {},
           ),
         );
-        },
-      ),
+      },
     );
   }
 }

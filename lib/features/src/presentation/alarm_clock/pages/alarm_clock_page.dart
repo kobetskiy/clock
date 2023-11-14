@@ -1,21 +1,26 @@
 import 'package:clock/features/src/models/view.dart';
+import 'package:clock/features/src/presentation/alarm_clock/pages/alarm_clock_details_page.dart';
 import 'package:clock/features/src/widgets/view.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../widgets/view.dart';
 
 AlarmClockData db = AlarmClockData();
 
-String _alarmClocksCount() {
-  if (List<AlarmClock>.from(db.box.values).isEmpty) {
-    return 'No alarms on';
-  } else if (List<AlarmClock>.from(db.box.values).length == 1) {
-    return '1 alarn';
-  }
-  return '${List<AlarmClock>.from(db.box.values).length} alarms on';
-}
-
 class AlarmClockPage extends StatelessWidget {
   const AlarmClockPage({super.key});
+
+  static const String routeName = '/clock';
+
+  String alarmClockOnCount() {
+    if (List<AlarmClock>.from(db.box.values).isEmpty) {
+      return 'No alarms on';
+    } else if (List<AlarmClock>.from(db.box.values).length == 1) {
+      return '1 alarm on';
+    } else {
+      return '${List<AlarmClock>.from(db.box.values).length} alarms on';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +35,13 @@ class AlarmClockPage extends StatelessWidget {
                 sliver: SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      const SizedBox(height: 35),
+                      const SizedBox(height: 25),
                       const CircleClockWidget(),
                       const SizedBox(height: 15),
-                      Text(_alarmClocksCount(),
-                          style: const TextStyle(fontSize: 16)),
+                      Text(
+                        alarmClockOnCount(),
+                        style: const TextStyle(fontSize: 16),
+                      ),
                       const SizedBox(height: 15),
                     ],
                   ),
@@ -42,8 +49,11 @@ class AlarmClockPage extends StatelessWidget {
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(8.0),
-                sliver: AlarmClockList(
-                  listOfAlarmClocks: List<AlarmClock>.from(db.box.values),
+                sliver: ValueListenableBuilder(
+                  valueListenable: db.box.listenable(),
+                  builder: (context, _, __) => AlarmClockList(
+                    listOfAlarmClocks: List<AlarmClock>.from(db.box.values),
+                  ),
                 ),
               ),
             ],
@@ -55,7 +65,20 @@ class AlarmClockPage extends StatelessWidget {
               child: FABButtonWidget(
                 icon: Icons.add,
                 onPressed: () {
-                  Navigator.pushNamed(context, '/clock/details');
+                  Navigator.pushNamed(
+                    context,
+                    AlarmClockDetailsPage.routeName,
+                    arguments: {
+                      'alarmClock': AlarmClock(
+                        isOn: true,
+                        id: db.box.length,
+                        hours: DateTime.now().hour,
+                        minutes: DateTime.now().minute,
+                        description: 'Alarm',
+                      ),
+                      'isNew': true,
+                    },
+                  );
                 },
               ),
             ),

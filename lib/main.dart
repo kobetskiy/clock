@@ -23,8 +23,8 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme(),
-      initialRoute: '/',
-      routes: router,
+      initialRoute: MyRouter.initialRoute,
+      routes: MyRouter.router,
     );
   }
 }

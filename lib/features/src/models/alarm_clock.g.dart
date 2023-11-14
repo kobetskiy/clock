@@ -17,25 +17,28 @@ class AlarmClockAdapter extends TypeAdapter<AlarmClock> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AlarmClock(
-      isOn: fields[0] as bool,
-      time: fields[1] as String,
-      description: fields[2] as String,
-      id: fields[3] as int,
+      isOn: fields[1] as bool,
+      id: fields[0] as int,
+      hours: fields[2] as int,
+      minutes: fields[3] as int,
+      description: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, AlarmClock obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.isOn)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.time)
+      ..write(obj.isOn)
       ..writeByte(2)
-      ..write(obj.description)
+      ..write(obj.hours)
       ..writeByte(3)
-      ..write(obj.id);
+      ..write(obj.minutes)
+      ..writeByte(4)
+      ..write(obj.description);
   }
 
   @override

@@ -1,4 +1,6 @@
+import 'package:clock/core/logger/logger.dart';
 import 'package:clock/core/ui/colors/colors.dart';
+import 'package:clock/features/src/models/view.dart';
 import 'package:clock/features/src/presentation/alarm_clock/widgets/view.dart';
 import 'package:clock/features/src/widgets/view.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +8,34 @@ import 'package:flutter/material.dart';
 class AlarmClockDetailsPage extends StatefulWidget {
   const AlarmClockDetailsPage({super.key});
 
+  static const String routeName = 'clock/details';
+
   @override
   State<AlarmClockDetailsPage> createState() => _AlarmClockDetailsPageState();
 }
 
 class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
-  TextEditingController descriptionTextController =
-      TextEditingController(text: 'Alarm');
+  late AlarmClockData db = AlarmClockData();
+  bool isInit = true;
+
+  late final Map<String, dynamic> args;
+  late final bool isNew;
+  late final AlarmClock alarmClock;
+  late final TextEditingController descriptionTextController;
+  late String alarmDescription;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (isInit) {
+      args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      isNew = args['isNew'];
+      alarmClock = args['alarmClock'];
+      alarmDescription = alarmClock.description;
+      descriptionTextController = TextEditingController(text: alarmDescription);
+      isInit = false;
+    }
+  }
 
   Future<T?> alertDialog<T>({
     required String title,
@@ -49,8 +72,36 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
     );
   }
 
-  void onDeleted() {
-    setState(() {
+  @override
+  Widget build(BuildContext context) {
+    void saveAlarm() {
+      if (isNew) {
+        AlarmClock newAlarm = AlarmClock(
+          isOn: true,
+          id: db.box.length,
+          hours: alarmClock.hours,
+          minutes: alarmClock.minutes,
+          description: alarmDescription,
+        );
+        db.create(newAlarm);
+      }
+    }
+
+    void updateAlarm() {
+      if (!isNew) {
+        AlarmClock thisNote = AlarmClock(
+          isOn: true,
+          id: alarmClock.id,
+          hours: alarmClock.hours,
+          minutes: alarmClock.minutes,
+          description: alarmDescription,
+        );
+        db.update(thisNote);
+      }
+      setState(() {});
+    }
+
+    void onDeleted() {
       alertDialog(
         title: 'Are you sure?',
         action: Text(
@@ -75,7 +126,7 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
               foregroundColor:
                   const MaterialStatePropertyAll(AppColors.dangerRedColor),
               onPressed: () {
-                // ! delete
+                db.delete(alarmClock);
                 Navigator.of(context, rootNavigator: true)
                     .popUntil(ModalRoute.withName('/'));
               },
@@ -84,11 +135,9 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
           ],
         ),
       );
-    });
-  }
+    }
 
-  void onBackButtonPressed() {
-    setState(() {
+    void onBackButtonPressed() {
       alertDialog(
         title: 'Save alarm?',
         buttons: Row(
@@ -98,7 +147,8 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
               isOutlined: true,
               width: 50,
               height: 12,
-              onPressed: () => Navigator.maybePop(context),
+              onPressed: () => Navigator.of(context, rootNavigator: true)
+                  .popUntil(ModalRoute.withName('/')),
               child: const Text('NO'),
             ),
             const SizedBox(width: 10),
@@ -106,7 +156,7 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
               width: 50,
               height: 12,
               onPressed: () {
-                // ! save alarm
+                isNew ? saveAlarm() : updateAlarm();
                 Navigator.of(context, rootNavigator: true)
                     .popUntil(ModalRoute.withName('/'));
               },
@@ -115,11 +165,9 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
           ],
         ),
       );
-    });
-  }
+    }
 
-  void onDesriptionPressed() {
-    setState(() {
+    void onDesriptionPressed() {
       alertDialog(
         title: 'New Description',
         action: Padding(
@@ -140,7 +188,10 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
               isOutlined: true,
               width: 35,
               height: 12,
-              onPressed: () => Navigator.maybePop(context),
+              onPressed: () {
+                descriptionTextController.text = alarmDescription;
+                Navigator.maybePop(context);
+              },
               child: const Text('CANCEL'),
             ),
             const SizedBox(width: 10),
@@ -148,7 +199,7 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
               width: 50,
               height: 12,
               onPressed: () {
-                // ! save new description
+                alarmDescription = descriptionTextController.text;
                 setState(() {});
                 Navigator.maybePop(context);
               },
@@ -157,11 +208,8 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
           ],
         ),
       );
-    });
-  }
+    }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -169,7 +217,7 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
             AppBarWidget(
               text: 'New alarm',
               leading: IconButton(
-                onPressed: onBackButtonPressed,
+                onPressed: () => setState(() => onBackButtonPressed()),
                 icon: const Icon(
                   Icons.arrow_back_rounded,
                 ),
@@ -177,8 +225,9 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
               action: [
                 IconButton(
                   onPressed: () {
-                    // ! save alarm
+                    isNew ? saveAlarm() : updateAlarm();
                     Navigator.maybePop(context);
+                    setState(() {});
                   },
                   icon: const Icon(
                     Icons.check_rounded,
@@ -192,8 +241,17 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomTimePickerWidget(timeValue: 5, maxValue: 23),
-                    CustomTimePickerWidget(timeValue: 5, maxValue: 59),
+                    CustomTimePickerWidget(
+                      timeValue: alarmClock.hours,
+                      maxValue: 23,
+                      onChanged: (value) => alarmClock.hours = value,
+                    ),
+                    const Text(':', style: TextStyle(fontSize: 36)),
+                    CustomTimePickerWidget(
+                      timeValue: alarmClock.minutes,
+                      maxValue: 59,
+                      onChanged: (value) => alarmClock.minutes = value,
+                    ),
                   ],
                 ),
               ),
@@ -214,7 +272,7 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 160,
                         child: Text(
-                          descriptionTextController.text,
+                          alarmDescription,
                           textAlign: TextAlign.right,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -230,6 +288,7 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
                       baseOffset: 0,
                       extentOffset: descriptionTextController.text.length,
                     );
+                    setState(() {});
                   },
                 )
               ]),
@@ -238,12 +297,14 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: PrimaryButtonWidget(
-        foregroundColor:
-            const MaterialStatePropertyAll(AppColors.dangerRedColor),
-        onPressed: onDeleted,
-        child: const Text('DELETE'),
-      ),
+      floatingActionButton: !isNew
+          ? PrimaryButtonWidget(
+              foregroundColor:
+                  const MaterialStatePropertyAll(AppColors.dangerRedColor),
+              onPressed: () => setState(() => onDeleted()),
+              child: const Text('DELETE'),
+            )
+          : const SizedBox(),
     );
   }
 }

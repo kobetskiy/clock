@@ -1,9 +1,13 @@
 import 'package:clock/features/src/presentation/pages_view.dart';
 
-final router = {
-  '/': (context) => const HomePage(),
-  '/clock': (context) => const AlarmClockPage(),
-  '/clock/details': (context) => const AlarmClockDetailsPage(),
-  '/stopwatch': (context) => const StopwatchPage(),
-  '/timer': (context) => const TimerPage()
-};
+class MyRouter {
+  static const String initialRoute = HomePage.routeName;
+
+  static final router = {
+    HomePage.routeName: (context) => const HomePage(),
+    AlarmClockPage.routeName: (context) => const AlarmClockPage(),
+    AlarmClockDetailsPage.routeName: (context) => const AlarmClockDetailsPage(),
+    StopwatchPage.routeName: (context) => const StopwatchPage(),
+    TimerPage.routeName: (context) => const TimerPage()
+  };
+}

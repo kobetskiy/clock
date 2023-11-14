@@ -1,4 +1,4 @@
-import 'package:clock/features/core/colors/colors.dart';
+import 'package:clock/core/ui/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -8,10 +8,10 @@ ThemeData theme() {
     fontSize: 20,
     fontWeight: FontWeight.w500,
   );
-  TextStyle titleMedium = const TextStyle(
+  TextStyle titleSmall = const TextStyle(
     color: AppColors.textColor,
-    fontSize: 22,
-    fontWeight: FontWeight.w500,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
   );
   TextStyle bodySmall = const TextStyle(
     color: AppColors.subtitleColor,
@@ -29,8 +29,8 @@ ThemeData theme() {
     pageTransitionsTheme: const PageTransitionsTheme(builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
     }),
+    fontFamily: GoogleFonts.roboto().fontFamily,
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      // backgroundColor: AppColors.primaryColor,
       foregroundColor: AppColors.textColor,
       iconSize: 32,
       shape: CircleBorder(),
@@ -47,23 +47,15 @@ ThemeData theme() {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(AppColors.listTileColor),
-        foregroundColor: MaterialStateProperty.all(AppColors.dangerRedColor),
         elevation: MaterialStateProperty.all(5),
         overlayColor: MaterialStateProperty.all(Colors.grey[850]),
-        padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 60)),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
         ),
       ),
     ),
     switchTheme: const SwitchThemeData(
       splashRadius: 0,
-    ),
-    timePickerTheme: TimePickerThemeData(
-      shape: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     ),
     cardTheme: CardTheme(
       color: AppColors.listTileColor,
@@ -73,21 +65,18 @@ ThemeData theme() {
       ),
     ),
     listTileTheme: ListTileThemeData(
-      titleTextStyle: titleMedium,
+      titleTextStyle: displaySmall.copyWith(fontSize: 28),
       subtitleTextStyle: bodySmall,
-      contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      contentPadding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.backgroundColor,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
     ),
-    textTheme: GoogleFonts.robotoTextTheme(
-      TextTheme(
+    textTheme: TextTheme(
         displaySmall: displaySmall,
-        titleMedium: titleMedium,
         bodySmall: bodySmall,
-      ),
-    ),
+        titleSmall: titleSmall),
   );
 }

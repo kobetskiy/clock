@@ -1,4 +1,3 @@
-import 'package:clock/core/logger/logger.dart';
 import 'package:clock/core/ui/colors/colors.dart';
 import 'package:clock/features/src/models/view.dart';
 import 'package:clock/features/src/presentation/alarm_clock/widgets/view.dart';
@@ -35,6 +34,17 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
       descriptionTextController = TextEditingController(text: alarmDescription);
       isInit = false;
     }
+  }
+
+  SnackBar infoSnackBar(String title) {
+    return SnackBar(
+      content: Text(title, style: Theme.of(context).textTheme.labelMedium),
+      duration: const Duration(seconds: 4),
+      backgroundColor: AppColors.barColor,
+      behavior: SnackBarBehavior.floating,
+      elevation: 5,
+      margin: const EdgeInsets.all(10),
+    );
   }
 
   Future<T?> alertDialog<T>({
@@ -127,6 +137,8 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
                   const MaterialStatePropertyAll(AppColors.dangerRedColor),
               onPressed: () {
                 db.delete(alarmClock);
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(infoSnackBar('Alarm has been deleted'));
                 Navigator.of(context, rootNavigator: true)
                     .popUntil(ModalRoute.withName('/'));
               },
@@ -157,6 +169,8 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
               height: 12,
               onPressed: () {
                 isNew ? saveAlarm() : updateAlarm();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(infoSnackBar('The alarm clock will ring in'));
                 Navigator.of(context, rootNavigator: true)
                     .popUntil(ModalRoute.withName('/'));
               },
@@ -227,6 +241,8 @@ class _AlarmClockDetailsPageState extends State<AlarmClockDetailsPage> {
                   onPressed: () {
                     isNew ? saveAlarm() : updateAlarm();
                     Navigator.maybePop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        infoSnackBar('The alarm clock will ring in'));
                     setState(() {});
                   },
                   icon: const Icon(

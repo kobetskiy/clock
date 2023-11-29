@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:clock/features/core/router/router.dart';
-import 'package:clock/features/core/theme/theme.dart';
+import 'core/router/router.dart';
+import 'core/ui/theme/theme.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'features/src/models/view.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(AlarmClockAdapter());
+  await Hive.openBox<AlarmClock>('alarm_clock_box');
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MainApp());
@@ -18,8 +23,8 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme(),
-      initialRoute: '/',
-      routes: router,
+      initialRoute: MyRouter.initialRoute,
+      routes: MyRouter.router,
     );
   }
 }

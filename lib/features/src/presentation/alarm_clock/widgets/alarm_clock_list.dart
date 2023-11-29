@@ -18,6 +18,17 @@ class _AlarmClockListState extends State<AlarmClockList> {
 
   @override
   Widget build(BuildContext context) {
+    SnackBar infoSnackBar(String title) {
+      return SnackBar(
+        content: Text(title, style: Theme.of(context).textTheme.labelMedium),
+        duration: const Duration(seconds: 4),
+        backgroundColor: AppColors.barColor,
+        behavior: SnackBarBehavior.floating,
+        elevation: 5,
+        margin: const EdgeInsets.all(10),
+      );
+    }
+
     return SliverList.builder(
       itemCount: db.box.length,
       itemBuilder: (context, index) {
@@ -31,7 +42,12 @@ class _AlarmClockListState extends State<AlarmClockList> {
               motion: const ScrollMotion(),
               children: [
                 SlidableAction(
-                  onPressed: (context) => setState(() => db.delete(alarm)),
+                  onPressed: (context) {
+                    db.delete(alarm);
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(infoSnackBar('Alarm has been deleted'));
+                    setState(() {});
+                  },
                   backgroundColor: AppColors.dangerRedColor,
                   foregroundColor: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -57,7 +73,13 @@ class _AlarmClockListState extends State<AlarmClockList> {
                   child: Switch(
                     value: alarm.isOn,
                     onChanged: (val) {
-                      alarm.isOn = val;
+                      db.update(AlarmClock(
+                        isOn: val,
+                        id: alarm.id,
+                        hours: alarm.hours,
+                        minutes: alarm.minutes,
+                        description: alarm.description,
+                      ));
                       setState(() {});
                     },
                   ),

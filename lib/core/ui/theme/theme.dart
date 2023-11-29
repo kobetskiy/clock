@@ -18,6 +18,11 @@ ThemeData theme() {
     fontSize: 16,
     fontWeight: FontWeight.normal,
   );
+  TextStyle labelMedium = const TextStyle(
+    color: AppColors.textColor,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
 
   return ThemeData(
     colorScheme: ColorScheme.fromSeed(
@@ -75,8 +80,10 @@ ThemeData theme() {
       elevation: 0,
     ),
     textTheme: TextTheme(
-        displaySmall: displaySmall,
-        bodySmall: bodySmall,
-        titleSmall: titleSmall),
+      displaySmall: displaySmall,
+      bodySmall: bodySmall,
+      titleSmall: titleSmall,
+      labelMedium: labelMedium,
+    ),
   );
 }

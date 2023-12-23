@@ -4,16 +4,16 @@ import 'package:clock/features/src/presentation/alarm_clock/pages/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class AlarmClockList extends StatefulWidget {
-  const AlarmClockList({super.key, required this.listOfAlarmClocks});
+class AlarmClockListWidget extends StatefulWidget {
+  const AlarmClockListWidget({super.key, required this.listOfAlarmClocks});
 
   final List<AlarmClock> listOfAlarmClocks;
 
   @override
-  State<AlarmClockList> createState() => _AlarmClockListState();
+  State<AlarmClockListWidget> createState() => _AlarmClockListWidgetState();
 }
 
-class _AlarmClockListState extends State<AlarmClockList> {
+class _AlarmClockListWidgetState extends State<AlarmClockListWidget> {
   AlarmClockData db = AlarmClockData();
 
   @override
@@ -60,6 +60,7 @@ class _AlarmClockListState extends State<AlarmClockList> {
               child: ListTile(
                 title: Text(
                   '${alarm.hours.toString().padLeft(2, '0')}:${alarm.minutes.toString().padLeft(2, '0')}',
+                  style: Theme.of(context).textTheme.displaySmall!.copyWith(fontSize: 28),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

@@ -70,7 +70,8 @@ ThemeData theme() {
       ),
     ),
     listTileTheme: ListTileThemeData(
-      titleTextStyle: displaySmall.copyWith(fontSize: 28),
+      titleTextStyle: displaySmall,
+      leadingAndTrailingTextStyle: displaySmall.copyWith(fontSize: 24),
       subtitleTextStyle: bodySmall,
       contentPadding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
     ),

@@ -5,17 +5,19 @@ import 'package:flutter/material.dart';
 class CircleStopwatchWidget extends StatefulWidget {
   const CircleStopwatchWidget({super.key});
 
-  void get startStop => _CircleStopwatchWidgetState().startStopStopwatch();
+  void get start => _CircleStopwatchWidgetState().startStopwatch();
+  void get stop => _CircleStopwatchWidgetState().stopStopwatch();
   void get reset => _CircleStopwatchWidgetState().resetStopwatch();
   void get addLap => _CircleStopwatchWidgetState().addLap();
   List<String> get getLaps => _CircleStopwatchWidgetState().getLaps();
+  bool get isRunning => _CircleStopwatchWidgetState().isRunning();
 
   @override
   State<CircleStopwatchWidget> createState() => _CircleStopwatchWidgetState();
 }
 
-late Stopwatch stopwatch;
-late Stopwatch circleStopwatch;
+Stopwatch stopwatch = Stopwatch();
+Stopwatch circleStopwatch = Stopwatch();
 late Timer timer;
 List<String> laps = [];
 late bool hasHours;
@@ -49,8 +51,6 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
   @override
   void initState() {
     super.initState();
-    stopwatch = Stopwatch();
-    circleStopwatch = Stopwatch();
     hasHours = false;
     timer = Timer.periodic(const Duration(milliseconds: 30), (_) {
       setState(() {});
@@ -63,11 +63,15 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
     super.dispose();
   }
 
-  void startStopStopwatch() {
+  void startStopwatch() {
     if (stopwatch.isRunning) {
       circleStopwatch.stop();
       stopwatch.stop();
-    } else {
+    }
+  }
+
+  void stopStopwatch() {
+    if (!stopwatch.isRunning) {
       circleStopwatch.start();
       stopwatch.start();
     }
@@ -91,6 +95,10 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
     return laps;
   }
 
+  bool isRunning() {
+    return stopwatch.isRunning;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -100,7 +108,7 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
           width: 250,
           height: 250,
           child: CustomPaint(
-            painter: CustomStopwatchPainter(),
+            painter: CustomCircle(),
           ),
         ),
         Text(
@@ -112,7 +120,7 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
   }
 }
 
-class CustomStopwatchPainter extends CustomPainter {
+class CustomCircle extends CustomPainter {
   late double percents = 100 / 60000 * int.parse(circleMillisecond()) / 100;
 
   @override

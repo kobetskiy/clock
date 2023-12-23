@@ -43,7 +43,7 @@ class _AlarmClockPageState extends State<AlarmClockPage> {
                     db.box.isNotEmpty
                         ? SliverPadding(
                             padding: const EdgeInsets.all(8.0),
-                            sliver: AlarmClockList(
+                            sliver: AlarmClockListWidget(
                               listOfAlarmClocks:
                                   List<AlarmClock>.from(db.box.values),
                             ),

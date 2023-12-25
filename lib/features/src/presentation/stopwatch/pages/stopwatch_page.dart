@@ -1,10 +1,13 @@
 import 'package:clock/features/src/models/view.dart';
-import 'package:clock/features/src/presentation/stopwatch/widgets/view.dart';
+import 'package:clock/features/src/presentation/stopwatch/widgets/circle_stopwatch_widget.dart';
 import 'package:clock/features/src/widgets/view.dart';
 import 'package:flutter/material.dart';
 
 AlarmClockData db = AlarmClockData();
-const CircleStopwatchWidget circleStopwatchWidget = CircleStopwatchWidget();
+StopwatchController stopwatchController = StopwatchController();
+CircleStopwatchWidget circleStopwatchWidget = CircleStopwatchWidget(
+  controller: stopwatchController,
+);
 
 class StopwatchPage extends StatefulWidget {
   const StopwatchPage({super.key});
@@ -26,24 +29,39 @@ class _StopwatchPageState extends State<StopwatchPage> {
             child: CustomScrollView(
               slivers: [
                 const AppBarWidget(text: 'Stopwatch'),
-                const SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   sliver: SliverToBoxAdapter(
                     child: Column(
                       children: [
-                        SizedBox(height: 25),
+                        const SizedBox(height: 25),
                         circleStopwatchWidget,
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                       ],
                     ),
                   ),
                 ),
-                LapsListWidget(),
-                // Builder(builder: (context) {
-                //   return const LapsListWidget(
-                //     circleStopwatchWidget: circleStopwatchWidget,
-                //   );
-                // })
+                SliverList.separated(
+                  itemCount: stopwatchController.lapsList.length,
+                  itemBuilder: (context, index) {
+                    int reversedIndex =
+                        stopwatchController.lapsList.length - 1 - index;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Card(
+                        margin: const EdgeInsets.all(0),
+                        child: ListTile(
+                          title: Text('Lap ${reversedIndex + 1}'),
+                          trailing:
+                              Text(stopwatchController.lapsList[reversedIndex]),
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 10,
+                  ),
+                ),
               ],
             ),
           ),
@@ -56,22 +74,22 @@ class _StopwatchPageState extends State<StopwatchPage> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.rotate_left_rounded),
-                    onPressed: !circleStopwatchWidget.isRunning
-                        ? () => setState(() => circleStopwatchWidget.reset)
+                    onPressed: !stopwatchController.isRunning
+                        ? () => setState(() => stopwatchController.reset())
                         : null,
                   ),
                   FABButtonWidget(
-                    icon: circleStopwatchWidget.isRunning
+                    icon: stopwatchController.isRunning
                         ? Icons.pause_rounded
                         : Icons.play_arrow_rounded,
-                    onPressed: circleStopwatchWidget.isRunning
-                        ? () => setState(() => circleStopwatchWidget.start)
-                        : () => setState(() => circleStopwatchWidget.stop),
+                    onPressed: stopwatchController.isRunning
+                        ? () => setState(() => stopwatchController.start())
+                        : () => setState(() => stopwatchController.stop()),
                   ),
                   IconButton(
                     icon: const Icon(Icons.timer_outlined),
-                    onPressed: circleStopwatchWidget.isRunning
-                        ? () => setState(() => circleStopwatchWidget.addLap)
+                    onPressed: stopwatchController.isRunning
+                        ? () => setState(() => stopwatchController.addLap())
                         : null,
                   ),
                 ],

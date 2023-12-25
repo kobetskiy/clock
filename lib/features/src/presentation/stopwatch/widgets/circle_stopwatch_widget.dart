@@ -3,23 +3,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class CircleStopwatchWidget extends StatefulWidget {
-  const CircleStopwatchWidget({super.key});
+  const CircleStopwatchWidget({super.key, required this.controller});
 
-  void get start => _CircleStopwatchWidgetState().startStopwatch();
-  void get stop => _CircleStopwatchWidgetState().stopStopwatch();
-  void get reset => _CircleStopwatchWidgetState().resetStopwatch();
-  void get addLap => _CircleStopwatchWidgetState().addLap();
-  List<String> get getLaps => _CircleStopwatchWidgetState().getLaps();
-  bool get isRunning => _CircleStopwatchWidgetState().isRunning();
+  final StopwatchController controller;
 
   @override
-  State<CircleStopwatchWidget> createState() => _CircleStopwatchWidgetState();
+  State<CircleStopwatchWidget> createState() => CircleStopwatchWidgetState();
 }
 
+List<String> laps = [];
 Stopwatch stopwatch = Stopwatch();
 Stopwatch circleStopwatch = Stopwatch();
 late Timer timer;
-List<String> laps = [];
 late bool hasHours;
 
 String circleMillisecond() {
@@ -47,7 +42,7 @@ String formattedText() {
       : "$hours:$minutes:$seconds.$milliseconds";
 }
 
-class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
+class CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
   @override
   void initState() {
     super.initState();
@@ -63,21 +58,46 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
     super.dispose();
   }
 
-  void startStopwatch() {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 250,
+          height: 250,
+          child: CustomPaint(
+            painter: CustomStopwatchPainter(),
+          ),
+        ),
+        Text(
+          formattedText(),
+          style: TextStyle(fontSize: hasHours ? 40 : 32, color: Colors.black87),
+        ),
+      ],
+    );
+  }
+}
+
+class StopwatchController {
+  bool get isRunning => stopwatch.isRunning;
+  List<String> get lapsList => laps;
+
+  void start() {
     if (stopwatch.isRunning) {
       circleStopwatch.stop();
       stopwatch.stop();
     }
   }
 
-  void stopStopwatch() {
+  void stop() {
     if (!stopwatch.isRunning) {
       circleStopwatch.start();
       stopwatch.start();
     }
   }
 
-  void resetStopwatch() {
+  void reset() {
     if (!stopwatch.isRunning) {
       stopwatch.reset();
       circleStopwatch.reset();
@@ -90,37 +110,9 @@ class _CircleStopwatchWidgetState extends State<CircleStopwatchWidget> {
       laps.add(formattedText());
     }
   }
-
-  List<String> getLaps() {
-    return laps;
-  }
-
-  bool isRunning() {
-    return stopwatch.isRunning;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        SizedBox(
-          width: 250,
-          height: 250,
-          child: CustomPaint(
-            painter: CustomCircle(),
-          ),
-        ),
-        Text(
-          formattedText(),
-          style: TextStyle(fontSize: hasHours ? 40 : 32, color: Colors.black87),
-        ),
-      ],
-    );
-  }
 }
 
-class CustomCircle extends CustomPainter {
+class CustomStopwatchPainter extends CustomPainter {
   late double percents = 100 / 60000 * int.parse(circleMillisecond()) / 100;
 
   @override

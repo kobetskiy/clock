@@ -2,10 +2,11 @@ import 'package:clock/features/src/presentation/timer/widgets/view.dart';
 import 'package:clock/features/src/widgets/view.dart';
 import 'package:flutter/material.dart';
 
-TimerController timerController = TimerController();
-CircleTimerWidget circleTimerWidget = CircleTimerWidget(
-  duration: 10,
+CountDownController timerController = CountDownController();
+
+CircleTimerWidget circularCountDownTimer = CircleTimerWidget(
   controller: timerController,
+  duration: 6,
 );
 
 class TimerPage extends StatefulWidget {
@@ -19,13 +20,17 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   void startStopTimer() {
-    if (!timerController.isStarted) {
-      timerController.start();
-    } else if (timerController.isStarted && !timerController.isPaused) {
-      timerController.pause();
-    } else {
-      timerController.resume();
-    }
+    setState(() {
+      if (!timerController.isStarted) {
+        timerController.start();
+      } else {
+        if (timerController.isRunning) {
+          timerController.pause();
+        } else {
+          timerController.resume();
+        }
+      }
+    });
   }
 
   @override
@@ -44,7 +49,7 @@ class _TimerPageState extends State<TimerPage> {
                     child: Column(
                       children: [
                         const SizedBox(height: 25),
-                        circleTimerWidget,
+                        circularCountDownTimer,
                         const SizedBox(height: 15),
                       ],
                     ),
@@ -62,27 +67,22 @@ class _TimerPageState extends State<TimerPage> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.rotate_left_rounded),
-                    onPressed: () {
-                      if (timerController.isPaused) {
-                        timerController.reset();
-                      }
-                    },
+                    onPressed: timerController.isPaused
+                        ? () => timerController.reset()
+                        : null,
                   ),
                   FABButtonWidget(
-                    icon: timerController.isRunning
-                        ? Icons.pause_rounded
-                        : Icons.play_arrow_rounded,
-                    onPressed: circleTimerWidget.duration != 0 ||
-                            timerController.isCompleted
-                        ? () => setState(() {
-                              startStopTimer();
-                              print(timerController.isCompleted);
-                            })
-                        : null,
+                    icon: !timerController.isRunning
+                        ? Icons.play_arrow_rounded
+                        : Icons.pause_rounded,
+                    onPressed: startStopTimer,
                   ),
                   IconButton(
                     icon: const Icon(Icons.audiotrack_rounded),
-                    onPressed: () {},
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => const ChooseTimerSoundWidget(),
+                    ),
                   ),
                 ],
               ),
